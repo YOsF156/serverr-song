@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const { Song } = require("./song");
-const { User } = require("./user")
+const { Song } = require("./Song.js");
+const { User } = require("./User.js")
+
 const connectDB = async () => {
     const mongoUrl = process.env.MONGO_URL;
     return await mongoose.connect(mongoUrl, {
@@ -9,4 +10,4 @@ const connectDB = async () => {
     });
 };
 const models = { Song, User }
-module.exports = { connectDB, models }
+module.exports = { connectDB, models } 

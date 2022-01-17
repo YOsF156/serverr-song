@@ -1,7 +1,7 @@
 const express = require("express");
 const { appendFile } = require("fs");
 const router = express.Router();
-const Song = require("../models/song")
+const Song = require("../models/Song")
 
 router.post('/', async (req, res) => {
     console.log(req.body);
