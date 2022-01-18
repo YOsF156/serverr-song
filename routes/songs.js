@@ -16,10 +16,23 @@ router.get('/', async (req, res) => {
     res.send(songList);
 
 })
-// router.post('/mm', (req, res) => {
 
-//     console.log("songs!!");
-//     res.send('songs!');
+// router.put('/', async (req, res) => {
+//     console.log(req.body);
+//     let songList = await Song.find({})
+//     res.send(songList);
 // })
+
+
+router.delete("/:id", async (req, res) => {
+    let song = await Song.findOne({ id: req.params.id });
+    if (!song) {
+        return res.status(401)
+    } else {
+        console.log(song);
+        deletedSong = await Song.deleteOne({ id: req.params.id });
+        return res.send({ message: "OK", deletedSong });
+    }
+});
 
 module.exports = router;
