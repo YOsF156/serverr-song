@@ -9,9 +9,9 @@ const songSchema = new mongoose.Schema(
         uploadedAt: { type: String },
         thumbnails_url: { type: String },
         url: { type: String, require: true },
-        playlist: { type: Array, require: true }
+        playlist: { type: Array, require: true },
+        user: { type: String, require: true }
     }
 )
 const Song = mongoose.model("Song", songSchema);
 module.exports = Song;
-

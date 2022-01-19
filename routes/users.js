@@ -25,6 +25,8 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register', async (req, res) => {
+    const isUser = await User.findOne({ username: req.body.username });
+    if (isUser) return res.status(500).json({ message: "the username is token" });
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const user = new User({
         username: req.body.username,
@@ -32,7 +34,8 @@ router.post('/register', async (req, res) => {
     })
     const saveUser = await user.save();
     console.log("New user add successfuly")
-    res.json(saveUser);
+    const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);
+    res.json({ accessToken });
 
 })
 
@@ -42,6 +45,8 @@ router.get('/', async (req, res) => {
     res.send(userList);
 
 })
+
+
 // router.post('/mm', (req, res) => {
 
 //     console.log("songs!!");
