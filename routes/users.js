@@ -10,13 +10,13 @@ router.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username });
         console.log(user);
-        if (!user) return res.status(400).json({ message: "Invalid credentials" });
+        if (!user) return res.status(400).json({ message: "you need register before login" });
         const match = await bcrypt.compare(req.body.password, user.password);
         if (match) {
             const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);
             res.json({ accessToken });
         } else {
-            res.status(400).json({ message: "Invalid credentials" });
+            res.status(400).json({ message: "one or more details is incorrect" });
         }
     } catch (e) {
         console.log(e);
@@ -34,7 +34,7 @@ router.post('/register', async (req, res) => {
         password: hashedPassword
     })
     const saveUser = await user.save();
-    console.log("New user add successfuly")
+    console.log("User successfully added")
     const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);
     res.json({ accessToken });
 
@@ -47,11 +47,5 @@ router.get('/', async (req, res) => {
 
 })
 
-
-// router.post('/mm', (req, res) => {
-
-//     console.log("songs!!");
-//     res.send('songs!');
-// })
 
 module.exports = router;

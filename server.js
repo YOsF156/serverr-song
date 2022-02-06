@@ -18,7 +18,7 @@ app.listen(port, () => {
 });
 
 connectDB().then(() => {
-    console.log("connect to t=he DB success")
+    console.log("connect to the DB success")
 })
 
 
@@ -26,4 +26,4 @@ app.use("/songs", authJWT, songsRoute);
 app.use("/user", userRoute);
 app.use("/api", apiRoute);
 app.use("/playlists", authJWT, playlistsRoute);
-// app.get()
+
