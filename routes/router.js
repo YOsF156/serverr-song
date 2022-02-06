@@ -1,4 +1,5 @@
 const songsRoute = require("./songs")
 const userRoute = require("./users")
 const apiRoute = require("./api")
-module.exports = { songsRoute, userRoute, apiRoute };
+const playlistsRoute = require("./playlists")
+module.exports = { songsRoute, userRoute, apiRoute, playlistsRoute };

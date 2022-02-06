@@ -4,7 +4,8 @@ const cors = require("cors");
 const bodyParse = require("body-parser");
 
 const { connectDB } = require("./models/index");
-const { songsRoute, userRoute, apiRoute } = require("./routes/router");
+const { songsRoute, userRoute, apiRoute, playlistsRoute } = require("./routes/router");
+const authJWT = require("./controller/auth");
 
 const app = express();
 app.use(cors());
@@ -21,7 +22,8 @@ connectDB().then(() => {
 })
 
 
-app.use("/songs", songsRoute);
+app.use("/songs", authJWT, songsRoute);
 app.use("/user", userRoute);
 app.use("/api", apiRoute);
+app.use("/playlists", authJWT, playlistsRoute);
 // app.get()
