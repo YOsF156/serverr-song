@@ -5,7 +5,7 @@ const Song = require("../models/Song")
 
 router.post('/:id', async (req, res) => {
     const isSong = await Song.findOne({ id: req.params.id });
-    if (isSong) break;
+    if (isSong) return true //חיפוש תגובה טובה יותר
     let newSong = await new Song({ ...req.body }).save();
     res.send({ message: "OK", newSong });
 })

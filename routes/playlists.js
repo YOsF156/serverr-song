@@ -4,8 +4,8 @@ const UserPlaylist = require("../models/UserPlaylist")
 
 
 // router.get('/', async (req, res) => { // להוסיף נתיב משיכת כל השירים מהפלייליסט המרכזי //  משיכת כל שירי הפלייליסטים של היוזר מיד אחרי התחברות ראושנית.
-//     let songList = await Song.find({})
-//     songList = songList.filter(song => song.user === req.user._id)
+//     let songLists = await UserPlaylist.find({})
+//     songLists = songLists.filter(song => song.user === req.user._id)
 //     res.send(songList);
 
 // })
@@ -19,7 +19,6 @@ router.post('/:id', async (req, res) => {//הוספת שיר פעם ראשונה
 })
 
 
-//משיכת רשימה מלאה של שמות הפלייליסטיםGET 
 // הוספת שיר לפלייליסט קייםPUT
 //הוספת שיר לפלייליסט חדשPOST 
 //מחיקת שיר מפלייליסט קייםDELETE
