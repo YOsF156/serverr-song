@@ -35,6 +35,7 @@ router.post('/register', async (req, res) => {
     })
     const saveUser = await user.save();
     console.log("User successfully added")
+    //הוספת פלייליסט ראשי
     const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);
     res.json({ accessToken });
 

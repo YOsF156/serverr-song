@@ -3,16 +3,27 @@ const router = express.Router();
 const Song = require("../models/Song")
 
 
-router.post('/:id', async (req, res) => {
+
+router.post('/:id', async (req, res) => {//adding new song to shadow list
     const isSong = await Song.findOne({ id: req.params.id });
-    if (isSong) return true //חיפוש תגובה טובה יותר
-    let newSong = await new Song({ ...req.body }).save();
+    let newSong
+    if (!isSong) { newSong = await new Song({ ...req.body }).save(); }
     res.send({ message: "OK", newSong });
 })
 
+
+
 router.get('/', async (req, res) => {// דלת אחורית
     let songList = await Song.find({})
-    res.send(songList);
+    function findUnique(arr, predicate) {
+        let found = {};
+        arr.forEach(d => {
+            found[predicate(d)] = d;
+        });
+        return Object.keys(found).map(key => found[key]);
+    }
+    let result = findUnique(songList, d => d.id);
+    res.send(result);
 })
 
 
