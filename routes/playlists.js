@@ -23,14 +23,28 @@ router.get('/myPlaylist/names', async (req, res) => {
 })
 
 router.post('/:id', async (req, res) => {//הוספת שיר פעם ראשונה לפלייליסט
-    const isSong = await UserPlaylist.findOne({ id: req.body.id });
-    if (isSong) return res.status(500).json({ message: "the song is already in the main playlist" });
-    let newSong = await new Song({ ...req.body, userID: `${req.user._id}` }).save();
-    res.send(newSong);
+    const userID = req.user._id;
+    const songID = req.params.id
+    let mainPlaylist = await UserPlaylist.findOne({ userID: userID, playlistName: "main playlist" });
+    if (!mainPlaylist) {
+        mainPlaylist = await new UserPlaylist({
+            playlistName: "main playlist",
+            userID: userID
+        }).save();
+    }
+    const isSong = await Song.findOne({ id: songID }).select("_id");
+    if (!isSong) return res.status(400).json({ message: "the song is unknown to me" });
+    if (!mainPlaylist.songsID.includes(isSong._id)) {
+        const addSongToMainPlaylist = await UserPlaylist.findOneAndUpdate({ userID: userID, playlistName: mainPlaylist.playlistName }, { songsID: [...mainPlaylist.songsID, isSong._id] }, {
+            new: true,
+        })
+        return res.send(addSongToMainPlaylist);
+    }
+    res.send({ isSong: isSong, mainPlaylist: mainPlaylist });
 
-})
+});
 
-router.post(`/addSongTo/:listName/:id`, async (req, res) => {//adding new playlist name
+router.put(`/addSongTo/:listName/:id`, async (req, res) => {//adding new playlist name
     const playlistName = req.params.listName;
     const songID = req.params.id;
     const userID = req.user._id
@@ -66,6 +80,17 @@ router.delete(`/deleteSongFrom/:listName/:id`, async (req, res) => {//adding new
         new: true,
     }).populate("songsID");
     res.send(playlist);
+})
+
+router.delete(`/:listName`, async (req, res) => {//adding new playlist name
+    const playlistName = req.params.listName;
+    if (playlistName != "main playlist") {
+
+        const userID = req.user._id
+        let playlist = await UserPlaylist.findOneAndDelete({ userID: userID, playlistName: playlistName })
+        res.send(playlist);
+    }
+    else { res.send("you can't delete the main playlist") }
 })
 
 
