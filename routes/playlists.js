@@ -62,13 +62,21 @@ router.put(`/addSongTo/:listName/:id`, async (req, res) => {//adding new playlis
             new: true,
         })
     }
-    playlist = await UserPlaylist.find({
-        playlistName: playlistName,
-        userID: userID
-    }).populate("songsID")
-    res.send(playlist[0])
+    const allPlaylist = await UserPlaylist.find({ userID: req.user._id }).populate("songsID");
+    res.send(allPlaylist);
 });
 
+router.put("/change/:listName", async (req, res) => {
+    const newName = req.body;
+    const userID = req.user._id
+    const playlistName = req.params.listName
+    const playlist = await UserPlaylist.findOneAndUpdate({ userID: userID, playlistName: playlistName }, { playlistName: newName }, {
+        new: true,
+    });
+    const allPlaylist = await UserPlaylist.find({ userID: req.user._id }).populate("songsID");
+    res.send(allPlaylist);
+
+})
 
 router.delete(`/deleteSongFrom/:listName/:id`, async (req, res) => {//adding new playlist name
     const playlistName = req.params.listName;
@@ -78,8 +86,9 @@ router.delete(`/deleteSongFrom/:listName/:id`, async (req, res) => {//adding new
     let songs = await playlist.songsID.map(song => { if (song.id !== songID) return song._id }).filter(id => id)
     playlist = await UserPlaylist.findOneAndUpdate({ userID: userID, playlistName: playlistName }, { songsID: songs }, {
         new: true,
-    }).populate("songsID");
-    res.send(playlist);
+    });
+    const allPlaylist = await UserPlaylist.find({ userID: userID }).populate("songsID");
+    res.send(allPlaylist);
 })
 
 router.delete(`/:listName`, async (req, res) => {//adding new playlist name
