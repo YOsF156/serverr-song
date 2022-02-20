@@ -87,7 +87,7 @@ router.delete(`/:listName`, async (req, res) => {//adding new playlist name
     if (playlistName != "main playlist") {
 
         const userID = req.user._id
-        let playlist = await UserPlaylist.findOneAndDelete({ userID: userID, playlistName: playlistName })
+        let playlist = await UserPlaylist.findOneAndDelete({ userID: userID, playlistName: playlistName });
         res.send(playlist);
     }
     else { res.send("you can't delete the main playlist") }
