@@ -67,14 +67,17 @@ router.put(`/addSongTo/:listName/:id`, async (req, res) => {//adding new playlis
 });
 
 router.put("/change/:listName", async (req, res) => {
-    const newName = req.body;
+    const newName = req.body.newName;
     const userID = req.user._id
     const playlistName = req.params.listName
-    const playlist = await UserPlaylist.findOneAndUpdate({ userID: userID, playlistName: playlistName }, { playlistName: newName }, {
-        new: true,
-    });
-    const allPlaylist = await UserPlaylist.find({ userID: req.user._id }).populate("songsID");
-    res.send(allPlaylist);
+    if (playlistName != "main playlist") {
+        const playlist = await UserPlaylist.findOneAndUpdate({ userID: userID, playlistName: playlistName }, { playlistName: newName }, {
+            new: true,
+        });
+        const allPlaylist = await UserPlaylist.find({ userID: req.user._id }).populate("songsID");
+        res.send(allPlaylist);
+
+    } else { res.send("you can't change the main playlist") }
 
 })
 
