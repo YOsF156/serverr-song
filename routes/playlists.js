@@ -70,12 +70,19 @@ router.put("/change/:listName", async (req, res) => {
     const newName = req.body.newName;
     const userID = req.user._id
     const playlistName = req.params.listName
-    if (playlistName != "main playlist") {
-        const playlist = await UserPlaylist.findOneAndUpdate({ userID: userID, playlistName: playlistName }, { playlistName: newName }, {
-            new: true,
-        });
-        const allPlaylist = await UserPlaylist.find({ userID: req.user._id }).populate("songsID");
-        res.send(allPlaylist);
+    if (playlistName != "main playlist" && playlistName != "אהובים במיוחד" && playlistName) {
+        const allPlaylist = await UserPlaylist.find({ userID: req.user._id });
+        const isNameExist = allPlaylist.map(playlist => { return playlist.playlistName }).includes(newName);
+        if (isNameExist) {
+            res.send("the name is already in your playlist names")
+        } else {
+
+            const playlist = await UserPlaylist.findOneAndUpdate({ userID: userID, playlistName: playlistName }, { playlistName: newName }, {
+                new: true,
+            });
+            const allPlaylist = await UserPlaylist.find({ userID: req.user._id }).populate("songsID");
+            res.send(allPlaylist);
+        }
 
     } else { res.send("you can't change the main playlist") }
 
@@ -96,13 +103,13 @@ router.delete(`/deleteSongFrom/:listName/:id`, async (req, res) => {//adding new
 
 router.delete(`/:listName`, async (req, res) => {//adding new playlist name
     const playlistName = req.params.listName;
-    if (playlistName != "main playlist") {
+    if (playlistName != "main playlist" && playlistName != "אהובים במיוחד") {
 
         const userID = req.user._id
         let playlist = await UserPlaylist.findOneAndDelete({ userID: userID, playlistName: playlistName });
         res.send(playlist);
     }
-    else { res.send("you can't delete the main playlist") }
+    else { res.send("you can't delete this playlist") }
 })
 
 
