@@ -56,7 +56,7 @@ router.put(`/addSongTo/:listName/:id`, async (req, res) => {//adding new playlis
         }).save();
     }
     const song = await Song.findOne({ id: songID }).select("_id")
-    console.log(song._id);
+    console.log(song);
     if (!playlist.songsID.includes(song._id)) {
         const addSongTo = await UserPlaylist.findOneAndUpdate({ userID: userID, playlistName: playlistName }, { songsID: [...playlist.songsID, song._id] }, {
             new: true,

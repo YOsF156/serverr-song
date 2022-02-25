@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const User = require("../models/User");
+const UserPlaylist = require("../models/UserPlaylist")
 const jwt = require("jsonwebtoken");
 
 
@@ -35,6 +36,10 @@ router.post('/register', async (req, res) => {
     })
     const saveUser = await user.save();
     console.log("User successfully added")
+    mainPlaylist = await new UserPlaylist({
+        playlistName: "main playlist",
+        userID: saveUser._id
+    }).save();
     //הוספת פלייליסט ראשי
     const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);
     res.json({ accessToken });
