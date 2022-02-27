@@ -7,14 +7,16 @@ const jwt = require("jsonwebtoken");
 
 
 router.post('/login', async (req, res) => {
-    console.log(req.body);
     try {
         const user = await User.findOne({ username: req.body.username });
         console.log(user);
         if (!user) return res.status(400).json({ message: "you need register before login" });
         const match = await bcrypt.compare(req.body.password, user.password);
+        const userId = { _id: user._id }
         if (match) {
-            const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);
+            // const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);//בעבר השתשמשנו עם הצפנה של כל הסכמה המונגואית
+            const accessToken = jwt.sign(userId, process.env.TOKEN_SECRET, { expiresIn: '20m' });
+            console.log(accessToken);
             res.json({ accessToken });
         } else {
             res.status(400).json({ message: "one or more details is incorrect" });
