@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const { Song } = require("./Song.js");
-const { User } = require("./User.js")
+const { Song } = require("./song.js");
+const { User } = require("./user.js")
 const { UserPlaylist } = require("./UserPlaylist.js")
 
 const connectDB = async () => {
