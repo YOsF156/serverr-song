@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
         console.log(user);
         if (!user) return res.status(400).json({ message: "you need register before login" });
         const match = await bcrypt.compare(req.body.password, user.password);
-        const userId = { _id: user._id }
+        const userId = { _id: user._id, username: user.username }
         if (match) {
             // const accessToken = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECRET);//בעבר השתשמשנו עם הצפנה של כל הסכמה המונגואית
             const accessToken = jwt.sign(userId, process.env.TOKEN_SECRET, { expiresIn: '20m' });
@@ -50,8 +50,10 @@ router.post('/register', async (req, res) => {
 
 router.get('/', async (req, res) => {
     console.log(req.body);
-    let userList = await User.find({})
-    res.send(userList);
+    let userList = await (await User.find({})).length;
+
+
+    res.json(userList);
 
 })
 
